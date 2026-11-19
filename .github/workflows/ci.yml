@@ -38,7 +38,7 @@ jobs:
 
       - name: Check source
         run: |
-          git diff --check
+          git -C "$GITHUB_WORKSPACE" -c safe.directory="$GITHUB_WORKSPACE" diff --check
           actionlint .github/workflows/ci.yml
           shellcheck .github/scripts/check-installed.sh
 
@@ -51,7 +51,8 @@ jobs:
           version=$(sed -n 's/^pkgver=//p' "$directory/PKGBUILD")
           test -n "$version"
           source="platformd-attestd-$version"
-          git archive --format=tar.gz --prefix="$source/" -o "$directory/$source.tar.gz" HEAD
+          git -C "$GITHUB_WORKSPACE" -c safe.directory="$GITHUB_WORKSPACE" archive \
+            --format=tar.gz --prefix="$source/" -o "$directory/$source.tar.gz" HEAD
           cd -- "$directory"
           runuser -u builder -- makepkg --noconfirm --log
 
@@ -99,7 +100,8 @@ jobs:
           directory="$RUNNER_TEMP/debian-build"
           source="$directory/platformd-attestd"
           install -d -o builder -g builder -- "$directory" "$source"
-          git archive HEAD | runuser -u builder -- tar -xf - -C "$source"
+          git -C "$GITHUB_WORKSPACE" -c safe.directory="$GITHUB_WORKSPACE" archive HEAD |
+            runuser -u builder -- tar -xf - -C "$source"
           cd -- "$source"
           runuser -u builder -- dpkg-buildpackage -b -us -uc 2>&1 | tee "$directory/build.log"
 
