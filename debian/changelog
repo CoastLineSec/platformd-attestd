@@ -1,0 +1,5 @@
+platformd-attestd (0.1.0) UNRELEASED; urgency=medium
+
+  * Package the attestation broker and optional document viewer separately.
+
+ -- CoastLineSec <coastlinesec@penguinmail.com>  Thu, 19 Nov 2026 06:35:39 +0000

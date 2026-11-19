@@ -1,0 +1,40 @@
+Source: platformd-attestd
+Section: admin
+Priority: optional
+Maintainer: CoastLineSec <coastlinesec@penguinmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ docbook-xml,
+ docbook-xsl,
+ libcurl4-openssl-dev (>= 7.85),
+ libgtk-4-dev,
+ libsystemd-dev (>= 257),
+ meson (>= 1.1),
+ ninja-build,
+ openssl,
+ pkgconf,
+ python3,
+ systemd,
+ systemd-dev,
+ xsltproc
+Standards-Version: 4.7.4
+Rules-Requires-Root: no
+Homepage: https://github.com/CoastLineSec/platformd-attestd
+
+Package: platformd-attestd
+Architecture: linux-any
+Depends: ${misc:Depends}, ${shlibs:Depends}, systemd (>= 257)
+Suggests: platformd-attestd-viewer, platformd-trustd, platformd-verifyd
+Description: broker for application-requested platform attestation
+ platformd-attestd connects a local application to an administrator-approved
+ remote verifier. A protected read requires platformd-trustd for TPM
+ attestation and platformd-verifyd for contextual user verification.
+ The broker socket is not enabled or started on installation.
+
+Package: platformd-attestd-viewer
+Section: utils
+Architecture: linux-any
+Depends: ${misc:Depends}, ${shlibs:Depends}, platformd-attestd (= ${binary:Version})
+Description: GTK viewer for an attestation-protected document
+ View a plain text document from the approved verifier through
+ platformd-attestd. The viewer does not save the document to disk.

@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+pkgbase=platformd-attestd
+pkgname=(platformd-attestd platformd-attestd-viewer)
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Broker application-requested platform attestation'
+arch=(x86_64)
+url='https://github.com/CoastLineSec/platformd-attestd'
+license=(LGPL-2.1-or-later)
+depends=(glibc 'systemd>=257' 'systemd-libs>=257' 'curl>=7.85')
+makedepends=(meson ninja pkgconf gtk4 libxslt docbook-xml docbook-xsl)
+checkdepends=(python openssl)
+options=(!debug)
+source=("$pkgbase-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+        arch-meson "$srcdir/$pkgbase-$pkgver" "$srcdir/build" \
+                --libdir=lib --libexecdir=libexec -Dviewer=enabled -Dwerror=true
+        meson compile -C "$srcdir/build"
+}
+
+check() {
+        meson test -C "$srcdir/build" --print-errorlogs
+}
+
+package_platformd-attestd() {
+        optdepends=(
+                'platformd-verifyd: required for presence verification'
+                'platformd-trustd: required for TPM evidence'
+                'platformd-attestd-viewer: open protected documents'
+        )
+
+        meson install -C "$srcdir/build" --no-rebuild --destdir "$pkgdir"
+        rm -- "$pkgdir/usr/bin/platformd-attest-viewer" \
+                "$pkgdir/usr/share/applications/io.platformd.AttestViewer.desktop"
+        rmdir -- "$pkgdir/usr/share/applications"
+}
+
+package_platformd-attestd-viewer() {
+        pkgdesc='Viewer for protected documents'
+        depends=("$pkgbase=$pkgver-$pkgrel" glibc glib2 gtk4 'systemd-libs>=257')
+
+        install -Dm755 "$srcdir/build/src/viewer/platformd-attest-viewer" \
+                "$pkgdir/usr/bin/platformd-attest-viewer"
+        install -Dm644 "$srcdir/$pkgbase-$pkgver/src/viewer/io.platformd.AttestViewer.desktop" \
+                "$pkgdir/usr/share/applications/io.platformd.AttestViewer.desktop"
+}

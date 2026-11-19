@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+%:
+	dh $@ --buildsystem=meson
+
+override_dh_auto_configure:
+	dh_auto_configure -- --libexecdir=libexec -Dviewer=enabled -Dwerror=true
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start

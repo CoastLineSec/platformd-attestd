@@ -24,12 +24,15 @@ meson test -C build
 sudo meson install -C build
 ```
 
+Arch and Debian packaging build `platformd-attestd` and the optional
+`platformd-attestd-viewer` separately.
+
 ## Usage
 
 Configure `/etc/platformd/attestd.conf` and set the socket group to permit the
-configured caller. The broker accepts the `protected-read` profile on the local
-Varlink socket. `attestctl read` writes the authorized resource to standard
-output.
+configured caller before enabling `platformd-attestd.socket`. The broker
+accepts the `protected-read` profile on the local Varlink socket.
+`attestctl read` writes the authorized resource to standard output.
 
 The optional `platformd-attest-viewer` opens the same resource as a plain text document.
 

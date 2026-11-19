@@ -64,6 +64,12 @@
   <refsect1>
     <title>Configuration</title>
 
+    <para>Installing the packages does not enable the socket or provision a
+    verifier. Configure platformd-verifyd and platformd-trustd, enroll the
+    device with the verifier, and install the verifier profile and transport
+    credentials. After configuring the socket group, enable the socket with
+    <command>systemctl enable --now platformd-attestd.socket</command>.</para>
+
     <para><filename>/etc/platformd/attestd.conf</filename> must be owned by root
     and readable only by root. Configure one <literal>[Verifier]</literal>
     section with these settings:</para>

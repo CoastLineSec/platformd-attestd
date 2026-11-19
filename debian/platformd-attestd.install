@@ -1,0 +1,6 @@
+usr/bin/attestctl
+usr/lib/systemd/system/platformd-attestd.socket
+usr/lib/systemd/system/platformd-attestd@.service
+usr/libexec/platformd-attestd
+usr/share/man/man8/platformd-attestd.8
+usr/share/varlink/io.platformd.Attest.varlink
