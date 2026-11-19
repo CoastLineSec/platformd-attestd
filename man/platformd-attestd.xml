@@ -30,6 +30,10 @@
       <arg choice="opt"><option>--socket=<replaceable>PATH</replaceable></option></arg>
       <arg choice="plain">read</arg>
     </cmdsynopsis>
+    <cmdsynopsis>
+      <command>platformd-attest-viewer</command>
+      <arg choice="opt"><option>--socket=<replaceable>PATH</replaceable></option></arg>
+    </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -50,6 +54,11 @@
     informational verification messages. The final result contains the resource
     or an error. <command>attestctl read</command> writes the resource to standard
     output and verification messages to standard error.</para>
+
+    <para>The optional <command>platformd-attest-viewer</command> requests the
+    same profile when a document is opened. It renders the authorized result as
+    UTF-8 plain text. Cancelling the request or closing the window disconnects
+    from the broker. The viewer does not save the document to disk.</para>
   </refsect1>
 
   <refsect1>

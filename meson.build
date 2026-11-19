@@ -15,6 +15,9 @@ libcurl = dependency('libcurl', version : '>= 7.85')
 systemd = dependency('systemd', required : false)
 
 subdir('src/attest')
+if not get_option('viewer').disabled()
+        subdir('src/viewer')
+endif
 subdir('man')
 
 system_unit_dir = systemd.found() ? systemd.get_variable(pkgconfig : 'systemdsystemunitdir') : get_option('prefix') / 'lib/systemd/system'

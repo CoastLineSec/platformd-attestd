@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Protected Document Viewer
+Exec=platformd-attest-viewer
+Icon=text-x-generic
+Categories=Office;Viewer;
+Terminal=false
