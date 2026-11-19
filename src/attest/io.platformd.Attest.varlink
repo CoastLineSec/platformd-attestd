@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+interface io.platformd.Attest
+
+# Read the resource selected by an administrator-approved profile. Requires
+# more=true. Intermediate replies contain a PAM informational message. The
+# final reply contains the granted resource in base64 encoding.
+method Read(profile: string) -> (
+        message: ?string,
+        status: ?string,
+        dataBase64: ?string
+)
+
+error Denied()

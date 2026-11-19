@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+[Unit]
+Description=Platform Attestation Broker Socket
+
+[Socket]
+ListenStream=/run/platformd-attestd/io.platformd.Attest
+SocketMode=0660
+DirectoryMode=0755
+Accept=yes
+Backlog=8
+MaxConnections=8
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

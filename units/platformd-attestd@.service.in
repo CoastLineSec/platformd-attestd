@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+[Unit]
+Description=Platform Attestation Broker
+After=systemd-logind.service
+
+[Service]
+Type=exec
+ExecStart=@LIBEXECDIR@/platformd-attestd
+StandardInput=socket
+StandardOutput=journal
+StandardError=journal
+RuntimeMaxSec=110s
+TimeoutStopSec=5s
+TasksMax=16
+MemoryMax=256M
+LimitCORE=0
+UMask=0077
+UnsetEnvironment=SSLKEYLOGFILE
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_SETUID CAP_SETGID
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native

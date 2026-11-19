@@ -1,0 +1,101 @@
+<?xml version='1.0'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!-- SPDX-License-Identifier: LGPL-2.1-or-later -->
+
+<refentry id="platformd-attestd">
+  <refentryinfo>
+    <title>platformd-attestd</title>
+    <productname>platformd</productname>
+    <corpauthor>platformd contributors</corpauthor>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>platformd-attestd</refentrytitle>
+    <manvolnum>8</manvolnum>
+    <refmiscinfo class="source">platformd</refmiscinfo>
+    <refmiscinfo class="manual">platformd-attestd</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>platformd-attestd</refname>
+    <refpurpose>Broker a local application's protected read to a remote verifier</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <para><filename>platformd-attestd.socket</filename></para>
+    <cmdsynopsis>
+      <command>attestctl</command>
+      <arg choice="opt"><option>--profile=<replaceable>NAME</replaceable></option></arg>
+      <arg choice="opt"><option>--socket=<replaceable>PATH</replaceable></option></arg>
+      <arg choice="plain">read</arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>The socket activates a broker instance for each connection. The
+    caller must be the configured UID in an eligible local logind session.
+    The broker obtains a challenge from the configured verifier, requests
+    contextual PAM verification through platformd-verifyd, and sends matching
+    TPM evidence from platformd-trustd to the verifier. The relying service
+    authorizes the read. The PAM declaration retains its root-declared evidence
+    quality.</para>
+
+    <para>The local Varlink interface is <constant>io.platformd.Attest</constant>
+    at <filename>/run/platformd-attestd/io.platformd.Attest</filename>.
+    <function>Read</function> requires <constant>more</constant> and accepts the
+    <literal>protected-read</literal> profile. Intermediate replies convey
+    informational verification messages. The final result contains the resource
+    or an error. <command>attestctl read</command> writes the resource to standard
+    output and verification messages to standard error.</para>
+  </refsect1>
+
+  <refsect1>
+    <title>Configuration</title>
+
+    <para><filename>/etc/platformd/attestd.conf</filename> must be owned by root
+    and readable only by root. Configure one <literal>[Verifier]</literal>
+    section with these settings:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><varname>UID=</varname></term>
+        <listitem><para>The authorized nonzero numeric UID. Set
+        <varname>SocketGroup=</varname> in a socket unit drop-in to a group
+        accessible by that UID.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><varname>URL=</varname></term>
+        <term><varname>Audience=</varname></term>
+        <listitem><para>Absolute HTTPS endpoint and exact audience accepted
+        from that verifier. The challenge and completion use one TLS
+        connection.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><varname>AttestationKey=</varname></term>
+        <term><varname>Label=</varname></term>
+        <listitem><para>Lowercase SHA-256 identifier of the enrolled attestation
+        key and a printable verifier label used for the verification
+        request.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><varname>CAFile=</varname></term>
+        <term><varname>CertificateFile=</varname></term>
+        <term><varname>PrivateKeyFile=</varname></term>
+        <term><varname>PinnedPublicKey=</varname></term>
+        <listitem><para>Absolute paths to root-owned PEM files and the server
+        public-key pin in <literal>sha256//</literal> form. Keep the private key
+        accessible only to root. The connection uses mutually authenticated
+        TLS 1.3 with server name validation.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><varname>AllowRetainedHistory=</varname></term>
+        <listitem><para>Set to <literal>yes</literal> to authorize disclosure of
+        the global retained runtime history to this verifier. The broker
+        requires explicit authorization for this disclosure.</para></listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
